@@ -1,0 +1,45 @@
+version: "3"
+
+volumes:
+  mysql:
+    driver: local
+  solr:
+    driver: local
+
+services:
+ solr:
+   restart: always
+   image: solr:latest
+   volumes:
+     - solr:/var/solr
+   ports:
+     - "8983:8983"
+   command:
+     - solr-precreate
+     - cb_default
+
+ mysql:
+   restart: always
+   image: mysql:latest
+   environment:
+     MYSQL_ROOT_PASSWORD: "terriblepassword"
+     MYSQL_DATABASE: "cb__casebox"
+     MYSQL_USER: "casebox"
+     MYSQL_PASSWORD: "terriblepassword"
+   volumes:
+     - mysql:/var/lib/mysql
+   ports:
+     - "3306:3306"
+
+ web:
+   restart: always
+   build:
+      context: .
+      dockerfile: ./dockerfiles/casebox/Dockerfile
+   links:
+     - mysql:mysql
+     - solr:solr
+   ports:
+     - "8000:80"
+   cap_add:
+     - SYS_PTRACE
