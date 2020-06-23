@@ -44,6 +44,7 @@ RUN ln -s /etc/apache2/conf-available/casebox.conf /etc/apache2/conf-enabled/cas
 COPY command.sh /command.sh
 
 RUN git clone --depth 1 https://github.com/huridocs/casebox.git /var/www/casebox
+COPY Ext.ux.plugins.IconCombo.js /var/www/casebox/httpsdocs/js/ux/Ext.ux.plugins.IconCombo.js
 COPY config.ini /var/www/casebox/httpsdocs/config.ini
 RUN mkdir -p /var/www/casebox/data/tmp/minify
 RUN ln -s /dev/stdout /var/www/casebox/logs/ssl_access_log
