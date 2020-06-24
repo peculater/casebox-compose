@@ -1,6 +1,6 @@
 # Docker-compose for casebox
 
-This works....eh.
+This works fine, as best I can tell.
 
 ## Installation
 
@@ -10,3 +10,7 @@ This works....eh.
 2a.  When it asks if you want to reindex your new core, hop into the mysql container and run `GRANT ALL PRIVILEGES ON cb_name-of-the-core.* to 'casebox';`.  Then say Yes to reindexing the core.
 3. Head to http://127.0.0.1:8000/name-of-the-core-from-step-3 .  Login is "root" with a password you set in step 3.
 
+## Not done
+1.  Email.  Almost certainly will error.
+2.  Cron.  I haven't tried to get that going.
+3.  Office document parsing.  OpenOffice is installed, but I don't know a good way to test that.

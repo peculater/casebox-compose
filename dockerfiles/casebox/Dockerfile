@@ -1,16 +1,14 @@
-FROM php:5-apache
+FROM php:7.1-apache
 
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get update \
   && apt-get install -y \
     git \
-    gnupg2 \
     libmagickwand-dev \
     libreoffice-core \
     libreoffice-common \
     libreoffice-writer \
     libreoffice-script-provider-python \
-    mysql-client \
     python \
   && apt-get autoremove -yqq --purge \
   && apt-get clean \
@@ -21,6 +19,24 @@ RUN  pecl install imagick \
   && docker-php-ext-install mysqli
 
 RUN a2enmod headers rewrite deflate
+
+# MySQL commandline is necessary for install, but not for running?
+# MySQL v8 container uses cached_sha2 passwords, which aren't supported by
+# any of the mysql clients in debian.  Use the upstream community package
+# instead.
+COPY mysql.gpg /tmp/mysql.gpg
+RUN apt-key add /tmp/mysql.gpg \
+  && apt-key adv --keyserver pgp.mit.edu --recv-keys 5072E1F5 \
+  && rm /tmp/mysql.gpg
+COPY mysql.list /etc/apt/sources.list.d/mysql.list
+
+RUN DEBIAN_FRONTEND=noninteractive \
+  apt-get update \
+  && apt-get install -y \
+    mysql-client \
+  && apt-get autoremove -yqq --purge \
+  && apt-get clean \
+  && rm -Rf /var/lib/apt/lists/*
 
 COPY nossl_casebox.conf /etc/apache2/conf-available/casebox.conf
 RUN ln -s /etc/apache2/conf-available/casebox.conf /etc/apache2/conf-enabled/casebox.conf
