@@ -9,18 +9,19 @@ volumes:
 services:
  solr:
    restart: always
-   image: solr:latest
+   build:
+      context: .
+      dockerfile: ./dockerfiles/solr/Dockerfile
    volumes:
      - solr:/var/solr
    ports:
      - "8983:8983"
    command:
-     - solr-precreate
-     - cb_default
+     - '-force'
 
  mysql:
    restart: always
-   image: mysql:latest
+   image: mysql:5.7
    environment:
      MYSQL_ROOT_PASSWORD: "terriblepassword"
      MYSQL_DATABASE: "cb__casebox"
@@ -39,6 +40,8 @@ services:
    links:
      - mysql:mysql
      - solr:solr
+   volumes:
+     - solr:/var/solr
    ports:
      - "8000:80"
    cap_add:
