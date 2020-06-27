@@ -10,6 +10,10 @@ This works fine, as best I can tell.
 2a.  When it asks if you want to reindex your new core, hop into the mysql container and run `GRANT ALL PRIVILEGES ON cb_name-of-the-core.* to 'casebox';`.  Then say Yes to reindexing the core.
 3. Head to http://127.0.0.1:8000/name-of-the-core-from-step-2 .  Login is "root" with a password you set in step 2.
 
+## For to make it usable outside of local dev
+1.  Update ServerName in nossl_casebox.conf to the externally visible hostname of your instance.  Throw some ServerAliases in there if needed.
+2.  Update the database passwords to something not terrible.
+
 ## Not done
 1.  Email.  Almost certainly will error.
 2.  Cron.  I haven't tried to get that going.
